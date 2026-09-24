@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+*.log
+
+# VS Code / IDE
+.vscode/
+.idea/
+
+# Exports (optional to commit or keep sample)
+# exports/
