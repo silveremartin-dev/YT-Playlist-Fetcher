@@ -1,6 +1,6 @@
 # 🎵 YT-Playlist-Fetcher
 
-> **Extracteur intelligent de playlists YouTube avec filtrage musical, nettoyage des titres et identification automatique des morceaux (iTunes & Deezer).**
+> **Smart YouTube playlist extractor with music filtering, title cleaning, and automatic track identification (iTunes & Deezer).**
 
 [![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![yt-dlp](https://img.shields.io/badge/Powered%20by-yt--dlp-red.svg)](https://github.com/yt-dlp/yt-dlp)
@@ -8,14 +8,14 @@
 
 ---
 
-## 🌟 Points Forts
+## 🌟 Highlights
 
-- 🚀 **Extraction 100% complète :** Récupère toutes les vidéos d'une playlist (même de plusieurs milliers d'éléments) sans limitation de défilement web.
-- 🔒 **Support des playlists privées :** Récupère vos **Vidéos « J'aime » (`LL`)** et **« À regarder plus tard » (`WL`)** grâce à la gestion sécurisée des sessions de navigation (Chrome, Edge, Firefox, Brave) ou fichier `cookies.txt`.
-- 🧹 **Nettoyage intelligent des titres :** Élimine automatiquement les artefacts de clips (`[Clip Officiel]`, `(Official Video)`, `4K`, `[Lyrics]`, `(Audio HD)`, etc.).
-- 🎯 **Filtrage Musical :** Isole la musique des autres contenus (tutoriels, podcasts, vlogs, gameplays, critiques).
-- 🏷️ **Identification & Métadonnées :** Interroge gratuitement les bases iTunes & Deezer (sans clé API) pour obtenir le nom d'artiste officiel, le vrai titre, l'album, le genre et l'année de sortie.
-- 💾 **Multi-exports :** Génère du **CSV (Excel)**, du **TXT pour import direct Spotify/Deezer**, du **M3U8** pour VLC et du **JSON**.
+- 🚀 **100% Full Extraction:** Fetches all videos from a playlist (even with thousands of items) without browser scrolling limits.
+- 🔒 **Private Playlists Support:** Easily retrieve your **"Liked Videos" (`LL`)** and **"Watch Later" (`WL`)** playlists using local browser sessions (Chrome, Edge, Firefox, Brave, Opera, Vivaldi) or a `cookies.txt` file.
+- 🧹 **Smart Title Cleaning:** Automatically strips video noise and artifacts (`[Official Video]`, `[Clip Officiel]`, `4K`, `[Lyrics]`, `(Audio HD)`, etc.).
+- 🎯 **Music Filtering:** Isolates music tracks from non-musical content (tutorials, podcasts, vlogs, gameplay, reviews).
+- 🏷️ **Track Identification & Metadata Enrichment:** Queries free iTunes & Deezer databases (no API key required) to identify official artist names, track titles, albums, genres, and release years.
+- 💾 **Multi-Format Export:** Generates **Excel-compatible CSV**, **Spotify/Deezer 1-click import TXT**, **M3U8** playlist files for media players (VLC, foobar2000), and structured **JSON**.
 
 ---
 
@@ -23,9 +23,9 @@
 
 ```mermaid
 flowchart LR
-    A["📥 Extraction\n(yt-dlp)\nPublic ou Privé (LL/WL)"] --> B["🔍 Filtrage\nCatégorie 'Music',\ndurée, mots-clés"]
-    B --> C["🧹 Nettoyage\nSuppression artefacts\n[Clip Officiel], 4K..."]
-    C --> D["🏷️ Identification\niTunes / Deezer API\n(Gratuit, sans clé)"]
+    A["📥 Extraction\n(yt-dlp)\nPublic or Private (LL/WL)"] --> B["🔍 Filtering\n'Music' category,\nduration, keywords"]
+    B --> C["🧹 Cleaning\nStrip title noise\n[Official Video], 4K..."]
+    C --> D["🏷️ Identification\niTunes / Deezer API\n(Free, no API key)"]
     D --> E["💾 Exports\nCSV (Excel) / TXT Spotify\nM3U8 / JSON"]
 ```
 
@@ -33,61 +33,82 @@ flowchart LR
 
 ## 📦 Installation
 
-1. **Cloner le dépôt :**
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/silveremartin-dev/YT-Playlist-Fetcher.git
    cd YT-Playlist-Fetcher
    ```
 
-2. **Créer l'environnement virtuel et installer les dépendances :**
+2. **Create a virtual environment and install dependencies:**
    ```bash
    python -m venv .venv
+   
+   # On Windows:
    .\.venv\Scripts\activate
+   
+   # On Linux / macOS:
+   source .venv/bin/activate
+
    pip install -r requirements.txt
    ```
 
 ---
 
-## 🚀 Utilisation
+## 🚀 Usage
 
-### 1. Mode Rapide (Double-clic sous Windows)
-Double-cliquez simplement sur le fichier **`launch.bat`**.
+### 1. Quick Launch (Windows Double-Click)
+Simply double-click the **`launch.bat`** file.
 
-### 2. Mode Interactif (Console)
+### 2. Interactive Mode (Terminal)
 ```bash
 python main.py
 ```
-Un menu interactif vous guide pas à pas pour choisir la playlist, le navigateur pour les cookies, et activer ou non l'enrichissement iTunes.
+An interactive terminal menu will guide you step by step to select the playlist, choose the browser for cookies (if private), and toggle iTunes/Deezer track identification.
 
-### 3. Mode Ligne de Commande (CLI)
+### 3. Command Line Interface (CLI)
 ```bash
-# Extraire vos Vidéos "J'aime" (Liked Videos) avec session Chrome
+# Extract your "Liked Videos" using Chrome session cookies
 python main.py --url "https://www.youtube.com/playlist?list=LL" --browser chrome
 
-# Extraire "À regarder plus tard" (Watch Later)
-python main.py --url "https://www.youtube.com/playlist?list=WL" --browser chrome
+# Extract "Watch Later" playlist using Edge session cookies
+python main.py --url "https://www.youtube.com/playlist?list=WL" --browser edge
 
-# Extraire une playlist publique quelconque
+# Extract any public or unlisted playlist
 python main.py --url "https://www.youtube.com/playlist?list=PLxxxxxxxxxxxxxxxx"
 
-# Utiliser un fichier cookies.txt exporté
+# Use an exported cookies.txt file
 python main.py --url "https://www.youtube.com/playlist?list=LL" --cookies cookies.txt
 ```
 
+#### CLI Options
+- `--url`, `-u`: YouTube playlist URL (supports `LL`, `WL`, and standard playlist URLs).
+- `--browser`, `-b`: Browser name to extract session cookies from (`chrome`, `edge`, `firefox`, `brave`, `opera`, `vivaldi`).
+- `--cookies`, `-c`: Path to a `cookies.txt` file (auto-detected if placed in the project folder).
+- `--all`: Keep all videos without filtering for music.
+- `--no-enrich`: Skip iTunes / Deezer metadata enrichment.
+- `--output`, `-o`: Custom output directory (default: `exports`).
+
 ---
 
-## 📁 Formats des fichiers exportés (dans `exports/`)
+## 📁 Export Formats (saved in `exports/`)
 
-| Fichier | Format | Description / Utilisation |
+| File | Format | Description / Use Case |
 |---|---|---|
-| `*_musique.csv` | CSV (UTF-8 avec BOM) | Tableau complet compatible **Excel** avec Artiste, Titre, Album, Genre, Année, Durée et URL. |
-| `*_spotify_import.txt` | Texte brut (`Artiste - Titre`) | Prêt pour l'import en 1 clic dans **Spotify / Deezer / Apple Music** via [Spotlistr](https://www.spotlistr.com/) ou [TuneMyMusic](https://www.tunemymusic.com/). |
-| `*.m3u8` | Playlist multimédia | Ouvrable directement dans **VLC**, **foobar2000**, etc. |
-| `*_musique.json` | JSON structuré | Données brutes et métadonnées pour intégration dans d'autres applications. |
-| `*_non_musique.csv` | CSV | Liste des vidéos écartées par le filtre (podcasts, tutos, etc.) pour ne rien perdre. |
+| `*_music.csv` | CSV (UTF-8 with BOM) | Full table compatible with **Excel** / **Google Sheets** containing Artist, Title, Album, Genre, Year, Duration, and URLs. |
+| `*_spotify_import.txt` | Plain text (`Artist - Title`) | Ready for 1-click import into **Spotify**, **Deezer**, or **Apple Music** via [Spotlistr](https://www.spotlistr.com/) or [TuneMyMusic](https://www.tunemymusic.com/). |
+| `*.m3u8` | Multimedia Playlist | Playable directly in **VLC**, **foobar2000**, and other media players. |
+| `*_music.json` | Structured JSON | Raw and enriched metadata for programmatic usage or third-party tools. |
+| `*_non_music.csv` | CSV | List of non-music videos filtered out (podcasts, tutorials, etc.) so no item is lost. |
 
 ---
 
-## 📄 Licence
+## 🔒 Security & Privacy
 
-Projet distribué sous licence MIT.
+- **Cookies are strictly local:** Session cookies or `cookies.txt` are only read locally by `yt-dlp` to authenticate requests with YouTube. No credentials or session tokens are ever sent to external third parties.
+- **Git protection:** All cookie files (`*cookie*`, `*.cookies`, `cookies/`), environment files, and export files (`exports/`, `*.csv`, `*.json`, `*.m3u8`) are systematically ignored via `.gitignore` to prevent any accidental commit to public repositories.
+
+---
+
+## 📄 License
+
+Distributed under the [MIT License](LICENSE).

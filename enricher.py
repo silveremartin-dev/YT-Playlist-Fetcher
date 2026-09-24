@@ -1,6 +1,6 @@
 """
-Module d'enrichissement et d'identification des morceaux via l'API iTunes et Deezer.
-Totalement gratuit, sans besoin de clé d'API.
+Metadata enrichment and track identification module using iTunes and Deezer APIs.
+Completely free, no API keys required.
 """
 
 from typing import Any, Dict, Optional
@@ -9,8 +9,8 @@ import requests
 
 def search_itunes_track(artist: str, title: str) -> Optional[Dict[str, Any]]:
     """
-    Recherche un morceau sur l'API iTunes Search.
-    Retourne les informations précises (Artiste officiel, Titre, Album, Genre, Année, etc.)
+    Search for a song on the iTunes Search API.
+    Returns official metadata (Artist, Title, Album, Genre, Year, Artwork, etc.).
     """
     query = f"{artist} {title}".strip()
     if not query:
@@ -48,7 +48,7 @@ def search_itunes_track(artist: str, title: str) -> Optional[Dict[str, Any]]:
 
 def search_deezer_track(artist: str, title: str) -> Optional[Dict[str, Any]]:
     """
-    Recherche alternative sur l'API Deezer si iTunes ne trouve pas.
+    Fallback search using Deezer API if iTunes does not return a match.
     """
     query = f"{artist} {title}".strip()
     if not query:
@@ -84,14 +84,14 @@ def search_deezer_track(artist: str, title: str) -> Optional[Dict[str, Any]]:
 
 def identify_track(artist: str, title: str) -> Optional[Dict[str, Any]]:
     """
-    Identifie le morceau en interrogeant d'abord iTunes, puis Deezer en secours.
+    Identify track by querying iTunes first, then Deezer as a fallback.
     """
-    # 1. Essai iTunes
+    # 1. Try iTunes
     res = search_itunes_track(artist, title)
     if res:
         return res
 
-    # 2. Essai Deezer
+    # 2. Try Deezer
     res = search_deezer_track(artist, title)
     if res:
         return res

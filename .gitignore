@@ -30,15 +30,27 @@ ENV/
 env.bak/
 venv.bak/
 
-# Sensitive files / Cookies
-*cookie*.txt
+# Sensitive files / Credentials / Cookies / Tokens
+*cookie*
 *.cookies
 cookies/
 *.session
+*.sqlite
+*.sqlite3
+.env
+.env.*
+*.key
+*.pem
+*.token
+*secret*
 
 # Exports & output data
 exports/
 *.m3u8
+*.csv
+*.json
+*.tsv
+*.xlsx
 
 # IDE & OS
 .vscode/
