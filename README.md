@@ -1,47 +1,93 @@
-# 🎵 YouTube Playlist Fetcher & Music Curator
+# 🎵 YT-Playlist-Fetcher
 
-Outil intelligent en Python pour extraire **100% du contenu** d'une playlist YouTube (y compris les playlists privées comme vos **Vidéos « J'aime » (`LL`)** et **« À regarder plus tard » (`WL`)**), filtrer les vidéos pour ne garder que la musique, et identifier automatiquement les vrais morceaux (Artiste, Titre, Album, Année, Pochette) via iTunes & Deezer.
+> **Extracteur intelligent de playlists YouTube avec filtrage musical, nettoyage des titres et identification automatique des morceaux (iTunes & Deezer).**
+
+[![Python Version](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![yt-dlp](https://img.shields.io/badge/Powered%20by-yt--dlp-red.svg)](https://github.com/yt-dlp/yt-dlp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## ✨ Fonctionnalités
+## 🌟 Points Forts
 
-1. **Extraction complète sans limite :**
-   - Récupère toutes les vidéos (même les playlists de plusieurs milliers de titres).
-   - Accès aux playlists privées (`list=LL`, `list=WL`) grâce à la lecture sécurisée de la session de votre navigateur (Edge, Chrome, Firefox, Brave, Opera).
+- 🚀 **Extraction 100% complète :** Récupère toutes les vidéos d'une playlist (même de plusieurs milliers d'éléments) sans limitation de défilement web.
+- 🔒 **Support des playlists privées :** Récupère vos **Vidéos « J'aime » (`LL`)** et **« À regarder plus tard » (`WL`)** grâce à la gestion sécurisée des sessions de navigation (Chrome, Edge, Firefox, Brave) ou fichier `cookies.txt`.
+- 🧹 **Nettoyage intelligent des titres :** Élimine automatiquement les artefacts de clips (`[Clip Officiel]`, `(Official Video)`, `4K`, `[Lyrics]`, `(Audio HD)`, etc.).
+- 🎯 **Filtrage Musical :** Isole la musique des autres contenus (tutoriels, podcasts, vlogs, gameplays, critiques).
+- 🏷️ **Identification & Métadonnées :** Interroge gratuitement les bases iTunes & Deezer (sans clé API) pour obtenir le nom d'artiste officiel, le vrai titre, l'album, le genre et l'année de sortie.
+- 💾 **Multi-exports :** Génère du **CSV (Excel)**, du **TXT pour import direct Spotify/Deezer**, du **M3U8** pour VLC et du **JSON**.
 
-2. **Filtrage Musique & Détection intelligente :**
-   - Détecte et isole la musique en éliminant les tutoriels, podcasts, vlogs, gameplays, etc.
-   - Nettoie les pollutions de titres YouTube (`[Clip Officiel]`, `(Official Video)`, `4K`, `[Paroles]`, `(Audio)`, etc.).
+---
 
-3. **Identification des morceaux :**
-   - Interroge les bases de données musicales (iTunes & Deezer) sans nécessiter de clé d'API.
-   - Retrouve le vrai nom de l'artiste officiel, le titre exact, l'album, le genre et l'année de sortie.
+## 🏗️ Architecture
 
-4. **Multi-formats d'exportation :**
-   - 📊 **CSV / Excel** : Tableau complet prêt pour tableur (`exports/*_musique.csv`).
-   - 🎧 **TXT Spotify** : Fichier `Artiste - Titre` prêt à être importé en 1 clic dans Spotify via [Spotlistr](https://www.spotlistr.com/) ou [TuneMyMusic](https://www.tunemymusic.com/).
-   - 📻 **Playlist M3U8** : Compatible VLC, foobar2000, etc.
-   - 📦 **JSON** : Données brutes et métadonnées enrichies.
+```mermaid
+flowchart LR
+    A["📥 Extraction\n(yt-dlp)\nPublic ou Privé (LL/WL)"] --> B["🔍 Filtrage\nCatégorie 'Music',\ndurée, mots-clés"]
+    B --> C["🧹 Nettoyage\nSuppression artefacts\n[Clip Officiel], 4K..."]
+    C --> D["🏷️ Identification\niTunes / Deezer API\n(Gratuit, sans clé)"]
+    D --> E["💾 Exports\nCSV (Excel) / TXT Spotify\nM3U8 / JSON"]
+```
+
+---
+
+## 📦 Installation
+
+1. **Cloner le dépôt :**
+   ```bash
+   git clone https://github.com/silveremartin-dev/YT-Playlist-Fetcher.git
+   cd YT-Playlist-Fetcher
+   ```
+
+2. **Créer l'environnement virtuel et installer les dépendances :**
+   ```bash
+   python -m venv .venv
+   .\.venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
 
 ---
 
 ## 🚀 Utilisation
 
-### Méthode 1 : Double-clic direct (Windows)
-Double-cliquez simplement sur le fichier **`launch.bat`** à la racine du projet.
+### 1. Mode Rapide (Double-clic sous Windows)
+Double-cliquez simplement sur le fichier **`launch.bat`**.
 
-### Méthode 2 : Ligne de commande
-Dans le terminal :
-```powershell
-.\.venv\Scripts\python main.py
+### 2. Mode Interactif (Console)
+```bash
+python main.py
+```
+Un menu interactif vous guide pas à pas pour choisir la playlist, le navigateur pour les cookies, et activer ou non l'enrichissement iTunes.
+
+### 3. Mode Ligne de Commande (CLI)
+```bash
+# Extraire vos Vidéos "J'aime" (Liked Videos) avec session Chrome
+python main.py --url "https://www.youtube.com/playlist?list=LL" --browser chrome
+
+# Extraire "À regarder plus tard" (Watch Later)
+python main.py --url "https://www.youtube.com/playlist?list=WL" --browser chrome
+
+# Extraire une playlist publique quelconque
+python main.py --url "https://www.youtube.com/playlist?list=PLxxxxxxxxxxxxxxxx"
+
+# Utiliser un fichier cookies.txt exporté
+python main.py --url "https://www.youtube.com/playlist?list=LL" --cookies cookies.txt
 ```
 
-### Options en ligne de commande :
-```powershell
-# Extraire les vidéos J'aime avec cookies du navigateur Edge
-.\.venv\Scripts\python main.py --url "https://www.youtube.com/playlist?list=LL" --browser edge
+---
 
-# Extraire une playlist publique sans enrichissement iTunes
-.\.venv\Scripts\python main.py --url "https://www.youtube.com/playlist?list=PL..." --no-enrich
-```
+## 📁 Formats des fichiers exportés (dans `exports/`)
+
+| Fichier | Format | Description / Utilisation |
+|---|---|---|
+| `*_musique.csv` | CSV (UTF-8 avec BOM) | Tableau complet compatible **Excel** avec Artiste, Titre, Album, Genre, Année, Durée et URL. |
+| `*_spotify_import.txt` | Texte brut (`Artiste - Titre`) | Prêt pour l'import en 1 clic dans **Spotify / Deezer / Apple Music** via [Spotlistr](https://www.spotlistr.com/) ou [TuneMyMusic](https://www.tunemymusic.com/). |
+| `*.m3u8` | Playlist multimédia | Ouvrable directement dans **VLC**, **foobar2000**, etc. |
+| `*_musique.json` | JSON structuré | Données brutes et métadonnées pour intégration dans d'autres applications. |
+| `*_non_musique.csv` | CSV | Liste des vidéos écartées par le filtre (podcasts, tutos, etc.) pour ne rien perdre. |
+
+---
+
+## 📄 Licence
+
+Projet distribué sous licence MIT.
