@@ -12,7 +12,20 @@ import os
 import sys
 from typing import Optional
 
+# Ensure UTF-8 output on Windows console
+if sys.stdout and hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+if sys.stderr and hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 from extractor import extract_playlist, get_available_browsers
+
 from filter_music import filter_and_process_playlist
 from enricher import identify_track
 from exporter import export_to_csv, export_to_json, export_to_m3u8, export_to_spotify_txt
